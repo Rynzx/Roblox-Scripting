@@ -1,0 +1,11 @@
+Explanation:
+
+SoundId: Replace <YourMusicAssetId> with the ID of the music you want to play. You can find this ID by right-clicking a music asset in Roblox and selecting "Copy Asset ID."
+
+Looped: This is set to true to ensure the music keeps looping when it reaches the end.
+
+Volume: Adjust this value as needed (from 0 to 1), where 0 is silent and 1 is full volume.
+
+Play(): Starts the music when the game runs.
+
+Just place this script somewhere (like a Script in ServerScriptService or LocalScript in StarterPlayer) and it will play your background music indefinitely!
