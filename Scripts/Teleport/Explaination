@@ -1,0 +1,9 @@
+Explanation:
+
+teleportPart: The part that the player touches to trigger the teleportation.
+
+targetPart: The part where the player will be teleported. Make sure this is properly defined in the workspace (e.g., named TeleportTarget).
+
+The script listens for the Touched event and checks if the touching object is a player by looking for a Humanoid.
+
+If the object has a Humanoid, the script teleports the player's HumanoidRootPart to the targetPart's location.
