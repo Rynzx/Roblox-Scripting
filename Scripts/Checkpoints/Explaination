@@ -1,0 +1,78 @@
+-- Table to store checkpoint spawn locations for each player
+local checkpointPositions = {}
+
+checkpointPositions:
+This table holds the respawn positions of each player when they reach a checkpoint. Each player's respawn position is stored as a Vector3 value, which is a 3D position in Roblox (x, y, z coordinates).
+The player's name is used as the key (like checkpointPositions[player]), and the position they should respawn at is the value (like checkpoint.Position + Vector3.new(0, 5, 0)).
+
+Player Added Event:
+game.Players.PlayerAdded:Connect(function(player)
+
+PlayerAdded event:
+This event fires every time a new player joins the game. We use this event to start tracking the player's progress and handle checkpoints for that specific player.
+
+player: The variable that represents the player who has just joined the game. This will be used to track and store their progress.
+
+Character Added Event:
+player.CharacterAdded:Connect(function(character)
+
+CharacterAdded event:
+Every time the player respawns (or joins the game for the first time), their character is created. This event triggers when the player's character is added to the game. We use this to handle the checkpoint logic and respawn system for the specific player's character.
+
+Checkpoint Touch Logic:
+local function onCheckpointTouched(checkpoint)
+
+This is a helper function that handles the logic when a player touches a checkpoint.
+
+checkpoint: The checkpoint part that the player touches. This is used to update the player's stage and their respawn position.
+
+local stage = player.leaderstats and player.leaderstats.Stage
+if stage then
+    -- Extract the checkpoint number from the checkpoint's name
+    local checkpointNumber = tonumber(checkpoint.Name:match("Checkpoint(%d+)"))
+
+stage: We access the player's Stage leaderboard stat. This Stage keeps track of which checkpoint the player is on.
+
+checkpointName:match("Checkpoint(%d+)"): This extracts the checkpoint number from the checkpoint's name. The checkpoint part must follow a naming convention like Checkpoint1, Checkpoint2, etc. It extracts the number (e.g., 1, 2) for comparison.
+
+if checkpointNumber then
+    if checkpointNumber > stage.Value then
+        stage.Value = checkpointNumber  -- Update player stage if they reached a higher checkpoint
+
+checkpointNumber > stage.Value: This checks if the player is reaching a higher numbered checkpoint than their current stage. If the checkpoint number is greater, it means the player is progressing, and their stage is updated to the new checkpoint number.
+
+checkpointPositions[player] = checkpoint.Position + Vector3.new(0, 5, 0)  -- Adjust Y-coordinate (5 units higher)
+
+checkpointPositions[player] = checkpoint.Position + Vector3.new(0, 5, 0): This stores the checkpoint's position in the checkpointPositions table, adding 5 units to the Y-coordinate to place the player slightly above the checkpoint. This ensures that when they respawn, they won't spawn underneath the checkpoint but slightly above it.
+
+for _, checkpoint in pairs(workspace:GetChildren()) do
+    if checkpoint:IsA("BasePart") and checkpoint.Name:match("Checkpoint") then
+        checkpoint.Touched:Connect(function(hit)
+            local playerTouched = game.Players:GetPlayerFromCharacter(hit.Parent)
+            if playerTouched == player then
+                onCheckpointTouched(checkpoint)  -- Update their stage if necessary
+            end
+        end)
+    end
+end
+
+for _, checkpoint in pairs(workspace:GetChildren()):
+This loop iterates through all the objects in the workspace, looking for any parts (like checkpoints) that are named Checkpoint.
+
+checkpoint.Touched:Connect(function(hit):
+This event fires when a player touches the checkpoint. The hit variable represents the object that touched the checkpoint.
+
+game.Players:GetPlayerFromCharacter(hit.Parent):
+We check if the object that touched the checkpoint belongs to a player (by looking at the parent of the object, which should be the player's character). If the player touches the checkpoint, we call the onCheckpointTouched function to update their stage and respawn position.
+
+Respawn Logic When Player Dies:
+character:WaitForChild("Humanoid").Died:Connect(function()
+
+Humanoid.Died event:
+This event triggers when the player's character dies. We use this to handle where the player should respawn when they die.
+
+player.CharacterAdded:Wait():
+This ensures that we wait for the player's new character to spawn after they die before setting their respawn position.
+
+SetPrimaryPartCFrame(CFrame.new(respawnPosition)):
+This moves the player's character to the checkpoint position stored in checkpointPositions for that player. The player will respawn at the position stored in the checkpoint (slightly above the checkpoint).
