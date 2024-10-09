@@ -1,0 +1,10 @@
+Explanation
+
+1. PlayerAdded Event
+- This triggers whenever a new player joins the game.
+
+2. leaderstats Folder
+- A folder named `leaderstats` is created, which Roblox automatically recognizes as a leaderboard.
+
+3. Points IntValue
+- An integer value named `Points` is added to the `leaderstats` folder, with an initial value of 0.
