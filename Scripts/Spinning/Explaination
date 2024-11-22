@@ -1,0 +1,15 @@
+1. local spinningPart = script.Parent:
+
+This grabs the part the script is attached to and stores it in the spinningPart variable.
+
+2. while true do:
+
+This creates an infinite loop that keeps running the code inside it.
+
+3. spinningPart.CFrame = spinningPart.CFrame * CFrame.Angles(0, math.rad(5), 0):
+
+This spins the part 5 degrees around the Y-axis (vertical rotation) every time it runs.
+
+4. wait(0.1):
+
+Pauses the script for 0.1 seconds before spinning the part again.
